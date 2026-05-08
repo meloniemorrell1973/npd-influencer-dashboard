@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 Cultural Calendar — Nubian Pride Designs</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0A0A0A;
+    --gold: #C9A84C;
+    --gold-dim: #8B6B2A;
+    --gold-light: #F0DFA8;
+    --gold-pale: #FBF5E6;
+    --cream: #F8F3EA;
+    --red: #8B1A1A;
+    --green: #1A4A2E;
+    --pan-red: #CC2200;
+    --pan-black: #0A0A0A;
+    --pan-green: #1A6B35;
+    --white: #FFFFFF;
+    --text-dim: #6B6155;
+    --border: rgba(201,168,76,0.25);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--black);
+    color: var(--cream);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px 80px;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,168,76,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 10% 80%, rgba(26,75,46,0.18) 0%, transparent 50%),
+      radial-gradient(ellipse 30% 30% at 90% 70%, rgba(139,26,26,0.12) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+
+
+  .hero-eyebrow {
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(48px, 9vw, 96px);
+    font-weight: 700;
+    line-height: 0.95;
+    text-align: center;
+    margin-bottom: 10px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(18px, 3vw, 26px);
+    font-weight: 400;
+    font-style: italic;
+    color: rgba(248,243,234,0.6);
+    text-align: center;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.6s;
+  }
+
+  /* ── EMAIL FORM ── */
+  .capture-box {
+    width: 100%;
+    max-width: 520px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 36px 40px;
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.8s;
+  }
+
+  .capture-box::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: 40px; right: 40px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .capture-box h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--gold-light);
+    margin-bottom: 6px;
+    text-align: center;
+  }
+
+  .capture-box p {
+    font-size: 13px;
+    color: rgba(248,243,234,0.5);
+    text-align: center;
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+
+  .form-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .form-group label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+  }
+
+  .form-group input, .form-group select {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 2px;
+    padding: 12px 14px;
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    color: var(--cream);
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    width: 100%;
+    -webkit-appearance: none;
+  }
+
+  .form-group input::placeholder { color: rgba(248,243,234,0.25); }
+  .form-group input:focus, .form-group select:focus {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.06);
+  }
+  .form-group select option { background: #1a1a1a; color: var(--cream); }
+
+  .submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--gold);
+    color: var(--black);
+    border: none;
+    border-radius: 2px;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .submit-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0);
+    transition: background 0.2s;
+  }
+
+  .submit-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .submit-btn:active { transform: translateY(0); }
+
+  .form-note {
+    font-size: 11px;
+    color: rgba(248,243,234,0.3);
+    text-align: center;
+    margin-top: 14px;
+  }
+
+  /* success state */
+  .success-state {
+    display: none;
+    text-align: center;
+    padding: 20px 0;
+  }
+  .success-state .check {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: rgba(26,75,46,0.3);
+    border: 1px solid var(--pan-green);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 24px;
+  }
+  .success-state h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    color: var(--gold-light);
+    margin-bottom: 8px;
+  }
+  .success-state p { font-size: 13px; color: rgba(248,243,234,0.5); }
+
+  .perks {
+    display: flex;
+    gap: 32px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 1s;
+  }
+  .perk {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: rgba(248,243,234,0.45);
+    letter-spacing: 0.5px;
+  }
+  .perk-icon {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: rgba(201,168,76,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+
+  /* ── CALENDAR SECTION ── */
+  .calendar-section {
+    background: var(--cream);
+    color: var(--black);
+    padding: 80px 24px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 6vw, 60px);
+    font-weight: 700;
+    text-align: center;
+    color: var(--black);
+    line-height: 1.05;
+    margin-bottom: 12px;
+  }
+
+  .section-title em { font-style: italic; color: var(--gold-dim); }
+
+  .section-sub {
+    font-size: 14px;
+    color: var(--text-dim);
+    text-align: center;
+    max-width: 480px;
+    margin: 0 auto 56px;
+    line-height: 1.7;
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    justify-content: center;
+    margin-bottom: 40px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #666;
+  }
+  .legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+
+  /* Calendar grid */
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    max-width: 1000px;
+    margin: 0 auto;
+    background: rgba(0,0,0,0.08);
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+
+  @media (max-width: 700px) { .cal-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 440px) { .cal-grid { grid-template-columns: 1fr; } }
+
+  .month-card {
+    background: white;
+    padding: 0;
+    position: relative;
+  }
+
+  .month-hdr {
+    background: var(--black);
+    color: var(--gold);
+    padding: 12px 14px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .month-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    font-weight: 700;
+  }
+
+  .month-yr {
+    font-size: 10px;
+    color: rgba(201,168,76,0.4);
+    letter-spacing: 2px;
+  }
+
+  .day-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    padding: 5px 8px 2px;
+  }
+
+  .dl {
+    text-align: center;
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #AAA;
+    padding: 2px 0;
+    text-transform: uppercase;
+  }
+
+  .days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    padding: 2px 8px 8px;
+    gap: 1px;
+  }
+
+  .dc {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    border-radius: 2px;
+    color: #444;
+    min-height: 22px;
+    font-weight: 400;
+    position: relative;
+    cursor: default;
+    transition: transform 0.1s;
+  }
+  .dc.wknd { color: #BBB; }
+  .dc.evt {
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    font-size: 9px;
+  }
+  .dc.evt:hover { transform: scale(1.15); z-index: 10; }
+
+  .evt-list {
+    padding: 0 10px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    border-top: 1px solid #F0EAE0;
+    padding-top: 6px;
+    margin-top: 2px;
+  }
+
+  .evt-pill {
+    font-size: 9px;
+    padding: 2px 7px 2px 5px;
+    border-radius: 2px;
+    font-weight: 500;
+    line-height: 1.4;
+    display: flex;
+    gap: 5px;
+    align-items: flex-start;
+  }
+  .evt-pill-date {
+    font-weight: 700;
+    opacity: 0.6;
+    flex-shrink: 0;
+    min-width: 22px;
+  }
+
+  /* ── BOTTOM CTA ── */
+  .bottom-cta {
+    background: var(--black);
+    padding: 80px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .bottom-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg, transparent, transparent 60px,
+      rgba(201,168,76,0.03) 60px, rgba(201,168,76,0,04) 61px
+    );
+  }
+  .bottom-kente {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 6px;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--pan-green) 0px, var(--pan-green) 20px,
+      var(--black) 20px, var(--black) 22px,
+      var(--gold) 22px, var(--gold) 42px,
+      var(--black) 42px, var(--black) 44px,
+      var(--pan-red) 44px, var(--pan-red) 64px,
+      var(--black) 64px, var(--black) 66px
+    );
+  }
+  .bottom-cta h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 6vw, 58px);
+    font-weight: 700;
+    color: var(--gold-light);
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .bottom-cta p {
+    font-size: 14px;
+    color: rgba(248,243,234,0.4);
+    max-width: 400px;
+    margin: 0 auto 36px;
+    line-height: 1.7;
+    position: relative;
+  }
+  .cta-mini-form {
+    display: flex;
+    gap: 10px;
+    max-width: 420px;
+    margin: 0 auto;
+    position: relative;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .cta-mini-form input {
+    flex: 1;
+    min-width: 200px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 13px 16px;
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    color: var(--cream);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .cta-mini-form input::placeholder { color: rgba(248,243,234,0.25); }
+  .cta-mini-form input:focus { border-color: var(--gold); }
+  .cta-mini-form button {
+    padding: 13px 24px;
+    background: var(--gold);
+    color: var(--black);
+    border: none;
+    border-radius: 2px;
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .cta-mini-form button:hover { background: var(--gold-light); }
+  .cta-success {
+    display: none;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-style: italic;
+    color: var(--gold-light);
+    position: relative;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Tooltip */
+  .tooltip {
+    position: fixed;
+    background: var(--black);
+    color: var(--cream);
+    border: 1px solid var(--gold);
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-size: 11px;
+    max-width: 220px;
+    pointer-events: none;
+    z-index: 1000;
+    display: none;
+    line-height: 1.5;
+  }
+  .tooltip strong {
+    display: block;
+    font-size: 12px;
+    color: var(--gold-light);
+    margin-bottom: 2px;
+  }
+  .tooltip em { font-style: normal; color: rgba(248,243,234,0.5); font-size: 10px; }
+
+  @media (max-width: 600px) {
+    .form-row { flex-direction: column; }
+    .capture-box { padding: 28px 22px; }
+    .perks { gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="tooltip" id="tooltip"></div>
+
+<!-- ── HERO / EMAIL CAPTURE ── -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-eyebrow">Nubian Pride Designs · 2026</div>
+  <h1 class="hero-title">Black Excellence<br><em>All Year Long</em></h1>
+  <p class="hero-subtitle">Your free guide to every cultural moment in 2026</p>
+
+  <div class="capture-box">
+    <div id="formState">
+      <h2>Get the Free 2026 Cultural Calendar</h2>
+      <p>Join our community and receive exclusive deals tied to every Black cultural event, HBCU moment, and holiday all year.</p>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" id="fname" placeholder="Your first name" autocomplete="given-name">
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" id="lname" placeholder="Your last name" autocomplete="family-name">
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom:12px">
+        <label>Email Address</label>
+        <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>I'm an HBCU</label>
+          <select id="hbcu">
+            <option value="">Select one</option>
+            <option>Current student</option>
+            <option>Alum</option>
+            <option>Supporter</option>
+            <option>Not applicable</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Interests</label>
+          <select id="interest">
+            <option value="">Select one</option>
+            <option>Fashion & Style</option>
+            <option>Music & Festivals</option>
+            <option>Film & Arts</option>
+            <option>Food & Culture</option>
+            <option>Tech & Business</option>
+            <option>Wellness</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="submit-btn" onclick="handleSubmit()">Claim Your Free Calendar →</button>
+      <p class="form-note">🔒 No spam. Unsubscribe anytime. We celebrate you, not your inbox.</p>
+    </div>
+
+    <div class="success-state" id="successState">
+      <div class="check">🖤</div>
+      <h3>Welcome to the family!</h3>
+      <p>Your 2026 Cultural Calendar is on its way.<br>Check your inbox — and stay ready, because deals are coming.</p>
+    </div>
+  </div>
+
+  <div class="perks">
+    <div class="perk"><div class="perk-icon">🎁</div> Exclusive deals on cultural holidays</div>
+    <div class="perk"><div class="perk-icon">📅</div> 40+ events all year</div>
+    <div class="perk"><div class="perk-icon">🖤</div> First access to new drops</div>
+  </div>
+</section>
+
+<!-- ── CALENDAR PREVIEW ── -->
+<section class="calendar-section">
+  <div class="section-label">What's inside</div>
+  <h2 class="section-title">Every Moment<br><em>That Matters</em></h2>
+  <p class="section-sub">From Juneteenth to Kwanzaa, Essence Fest to AfroTech — we send you deals before every major moment.</p>
+
+  <div class="legend" id="legend"></div>
+  <div class="cal-grid" id="calGrid"></div>
+</section>
+
+<!-- ── BOTTOM CTA ── -->
+<section class="bottom-cta">
+  <h2>Don't Miss a Moment.</h2>
+  <p>Sign up free. Get the calendar. Stay dressed for every celebration.</p>
+  <div class="cta-mini-form" id="miniForm">
+    <input type="email" id="miniEmail" placeholder="Enter your email">
+    <button onclick="handleMiniSubmit()">Join Free</button>
+  </div>
+  <div class="cta-success" id="miniSuccess">You're in. Check your inbox. 🖤</div>
+  <div class="bottom-kente"></div>
+</section>
+
+<script>
+const COLORS = {
+  "Holiday":         "#2B2B2B",
+  "Heritage":        "#6B2D2D",
+  "Music":           "#1A2E4A",
+  "Film & Arts":     "#2E1A4A",
+  "Food & Culture":  "#1A3A2A",
+  "HBCU":            "#7A5C1A",
+  "Professional":    "#1A2A4A",
+  "Tech & Business": "#2A1A4A",
+  "Wellness":        "#1A3A38",
+  "Diaspora":        "#4A1A2A",
+};
+
+const LIGHT = {
+  "Holiday":         "#EFEFEF",
+  "Heritage":        "#F8EDED",
+  "Music":           "#EBF0F8",
+  "Film & Arts":     "#F0EBF8",
+  "Food & Culture":  "#EAF5EF",
+  "HBCU":            "#F8F2E0",
+  "Professional":    "#E6EEF8",
+  "Tech & Business": "#EDE6F8",
+  "Wellness":        "#E6F5F3",
+  "Diaspora":        "#F8E6EE",
+};
+
+const events = [
+  {month:1, day:1,  name:"New Year's Day",               cat:"Holiday",        loc:"Nationwide"},
+  {month:1, day:19, name:"Martin Luther King Jr. Day",   cat:"Heritage",       loc:"Nationwide"},
+  {month:2, day:1,  end:28, name:"Black History Month",  cat:"Heritage",       loc:"Nationwide"},
+  {month:2, day:16, name:"Presidents' Day",              cat:"Holiday",        loc:"Nationwide"},
+  {month:2, day:19, end:22, name:"SOBEWFF Black Heritage Weekend", cat:"Food & Culture", loc:"Miami, FL"},
+  {month:2, day:28, name:"AA Cultural Celebration",      cat:"Heritage",       loc:"Raleigh, NC"},
+  {month:3, day:21, end:26, name:"HBCU Spring Fest",     cat:"HBCU",           loc:"Various"},
+  {month:4, day:23, end:30, name:"New Orleans Jazz Fest",cat:"Music",          loc:"New Orleans"},
+  {month:5, day:25, name:"Memorial Day",                 cat:"Holiday",        loc:"Nationwide"},
+  {month:5, day:27, end:31, name:"American Black Film Festival", cat:"Film & Arts", loc:"Miami, FL"},
+  {month:5, day:30, end:31, name:"Roots Picnic 2026",    cat:"Music",          loc:"Philadelphia, PA"},
+  {month:6, day:18, end:21, name:"Juneteenth Chicago Fest",cat:"Heritage",     loc:"Chicago, IL"},
+  {month:6, day:19, name:"Juneteenth 🟢🖤🔴",            cat:"Holiday",        loc:"Nationwide"},
+  {month:6, day:19, end:21, name:"Baltimore AA Festival",cat:"Food & Culture", loc:"Baltimore, MD"},
+  {month:6, day:26, name:"Black Girl Wellness Fest",     cat:"Wellness",       loc:"Chicago, IL"},
+  {month:7, day:3,  end:5,  name:"Essence Festival of Culture", cat:"Music",  loc:"New Orleans"},
+  {month:7, day:4,  name:"Independence Day",             cat:"Holiday",        loc:"Nationwide"},
+  {month:7, day:9,  end:19, name:"Indiana Black Expo",   cat:"Heritage",       loc:"Indianapolis, IN"},
+  {month:7, day:23, end:25, name:"Cincinnati Music Festival", cat:"Music",     loc:"Cincinnati, OH"},
+  {month:7, day:30, name:"Caribana Toronto Carnival",    cat:"Diaspora",       loc:"Toronto, Canada"},
+  {month:8, day:20, name:"MV African American Film Festival", cat:"Film & Arts",loc:"Martha's Vineyard"},
+  {month:8, day:22, end:23, name:"Africana VA Beach Funkfest", cat:"Music",    loc:"Virginia Beach, VA"},
+  {month:8, day:29, name:"HBCU Met Gala",                cat:"HBCU",          loc:"Various"},
+  {month:9, day:5,  end:6,  name:"AA Cultural Festival of Raleigh", cat:"Heritage", loc:"Raleigh, NC"},
+  {month:9, day:7,  name:"Labor Day",                    cat:"Holiday",        loc:"Nationwide"},
+  {month:9, day:23, end:25, name:"National Black MBA Conference", cat:"Professional", loc:"Los Angeles"},
+  {month:10,day:8,  end:11, name:"Silicon Valley African Film Fest", cat:"Film & Arts", loc:"San Jose, CA"},
+  {month:10,day:12, name:"Columbus Day",                 cat:"Holiday",        loc:"Nationwide"},
+  {month:10,day:17, name:"Taste of Soul Festival",       cat:"Food & Culture", loc:"Los Angeles, CA"},
+  {month:10,day:21, end:23, name:"Black Men XCEL",       cat:"Professional",   loc:"Orlando, FL"},
+  {month:10,day:24, end:25, name:"Forever Mine Festival",cat:"Music",          loc:"Chicago, IL"},
+  {month:11,day:2,  end:6,  name:"AfroTech 2026 (10th Anniversary)", cat:"Tech & Business", loc:"Houston, TX"},
+  {month:11,day:11, name:"Veterans Day",                 cat:"Holiday",        loc:"Nationwide"},
+  {month:11,day:26, name:"Thanksgiving Day",             cat:"Holiday",        loc:"Nationwide"},
+  {month:12,day:25, name:"Christmas Day",                cat:"Holiday",        loc:"Nationwide"},
+  {month:12,day:26, end:31, name:"Kwanzaa 🕯️",          cat:"Heritage",       loc:"Nationwide"},
+];
+
+const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const DAYS   = ["Su","Mo","Tu","We","Th","Fr","Sa"];
+
+// Legend
+const legendEl = document.getElementById("legend");
+Object.entries(COLORS).forEach(([cat, color]) => {
+  legendEl.innerHTML += `<div class="legend-item"><div class="legend-dot" style="background:${color}"></div>${cat}</div>`;
+});
+
+// Tooltip
+const tip = document.getElementById("tooltip");
+function showTip(e, ev) {
+  tip.innerHTML = `<strong>${ev.name}</strong>${ev.end ? ` (${ev.day}–${ev.end})` : ` (${ev.day})`}<br><em>${ev.loc}</em>`;
+  tip.style.display = "block";
+  moveTip(e);
+}
+function moveTip(e) {
+  let x = e.clientX + 12, y = e.clientY + 12;
+  if (x + 240 > window.innerWidth) x = e.clientX - 232;
+  if (y + 80 > window.innerHeight) y = e.clientY - 80;
+  tip.style.left = x + "px";
+  tip.style.top  = y + "px";
+}
+function hideTip() { tip.style.display = "none"; }
+document.addEventListener("mousemove", e => { if(tip.style.display==="block") moveTip(e); });
+
+function getEventsForDay(month, day) {
+  return events.filter(ev => {
+    if (ev.month !== month) return false;
+    return ev.end ? (day >= ev.day && day <= ev.end) : day === ev.day;
+  });
+}
+
+function buildMonth(mi) {
+  const month = mi + 1;
+  const firstDow = new Date(2026, mi, 1).getDay();
+  const daysIn   = new Date(2026, mi+1, 0).getDate();
+  const monthEvs = events.filter(ev => ev.month === month);
+
+  let html = `<div class="month-card">
+    <div class="month-hdr"><span class="month-name">${MONTHS[mi]}</span><span class="month-yr">2026</span></div>
+    <div class="day-row">${DAYS.map(d=>`<div class="dl">${d}</div>`).join("")}</div>
+    <div class="days">`;
+
+  for (let i = 0; i < firstDow; i++) html += `<div class="dc"></div>`;
+
+  for (let d = 1; d <= daysIn; d++) {
+    const dow = (firstDow + d - 1) % 7;
+    const isWknd = dow === 0 || dow === 6;
+    const dayEvs = getEventsForDay(month, d);
+
+    if (dayEvs.length > 0) {
+      const primary = dayEvs[0];
+      const bg = COLORS[primary.category] || COLORS[primary.cat] || "#333";
+      const evData = dayEvs.map(ev => JSON.stringify({name:ev.name, day:ev.day, end:ev.end||null, loc:ev.loc})).join("||");
+      html += `<div class="dc evt" style="background:${bg}" data-events='${evData}'>${d}${dayEvs.length>1?`<span style="position:absolute;top:0;right:1px;font-size:7px;opacity:0.75">+${dayEvs.length-1}</span>`:""}</div>`;
+    } else {
+      html += `<div class="dc${isWknd?" wknd":""}">${d}</div>`;
+    }
+  }
+
+  html += `</div>`;
+
+  if (monthEvs.length > 0) {
+    html += `<div class="evt-list">`;
+    monthEvs.forEach(ev => {
+      const cat = ev.category || ev.cat;
+      const bg   = LIGHT[cat] || "#F5F5F5";
+      const dark = COLORS[cat] || "#333";
+      const ds   = ev.end ? `${ev.day}–${ev.end}` : `${ev.day}`;
+      html += `<div class="evt-pill" style="background:${bg};color:${dark}"><span class="evt-pill-date">${ds}</span>${ev.name}</div>`;
+    });
+    html += `</div>`;
+  }
+
+  html += `</div>`;
+  return html;
+}
+
+const grid = document.getElementById("calGrid");
+for (let m = 0; m < 12; m++) grid.innerHTML += buildMonth(m);
+
+// Tooltip events
+document.querySelectorAll(".dc.evt").forEach(el => {
+  el.addEventListener("mouseenter", e => {
+    try {
+      const evs = el.dataset.events.split("||").map(s => JSON.parse(s));
+      showTip(e, evs[0]);
+    } catch(err) {}
+  });
+  el.addEventListener("mouseleave", hideTip);
+});
+
+// Form submit
+function handleSubmit() {
+  const fname = document.getElementById("fname").value.trim();
+  const email = document.getElementById("email").value.trim();
+  if (!fname || !email || !email.includes("@")) {
+    alert("Please enter your first name and a valid email address.");
+    return;
+  }
+  document.getElementById("formState").style.display = "none";
+  document.getElementById("successState").style.display = "block";
+
+  // In production: send to your ESP (Klaviyo, Mailchimp, etc.)
+  console.log("New subscriber:", {
+    firstName: fname,
+    lastName: document.getElementById("lname").value.trim(),
+    email,
+    hbcu: document.getElementById("hbcu").value,
+    interest: document.getElementById("interest").value,
+    source: "2026 Cultural Calendar",
+    timestamp: new Date().toISOString()
+  });
+}
+
+function handleMiniSubmit() {
+  const email = document.getElementById("miniEmail").value.trim();
+  if (!email || !email.includes("@")) {
+    alert("Please enter a valid email address.");
+    return;
+  }
+  document.getElementById("miniForm").style.display = "none";
+  document.getElementById("miniSuccess").style.display = "block";
+  console.log("Mini form subscriber:", { email, source: "Bottom CTA", timestamp: new Date().toISOString() });
+}
+</script>
+</body>
+</html>
