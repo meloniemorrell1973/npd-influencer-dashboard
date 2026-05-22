@@ -1,641 +1,345 @@
-{{ 'section-image-banner.css' | asset_url | stylesheet_tag }}
-{{ 'component-slider.css' | asset_url | stylesheet_tag }}
-{{ 'component-slideshow.css' | asset_url | stylesheet_tag }}
-
-{%- if section.settings.slide_height == 'adapt_image' and section.blocks.first.settings.image != blank -%}
-  {%- style -%}
-    @media screen and (max-width: 749px) {
-      #Slider-{{ section.id }}::before,
-      #Slider-{{ section.id }} .media::before,
-      #Slider-{{ section.id }}:not(.banner--mobile-bottom) .banner__content::before {
-        padding-bottom: {{ 1 | divided_by: section.blocks.first.settings.image.aspect_ratio | times: 100 }}%;
-        content: '';
-        display: block;
-      }
-    }
-
-    @media screen and (min-width: 750px) {
-      #Slider-{{ section.id }}::before,
-      #Slider-{{ section.id }} .media::before {
-        padding-bottom: {{ 1 | divided_by: section.blocks.first.settings.image.aspect_ratio | times: 100 }}%;
-        content: '';
-        display: block;
-      }
-    }
-  {%- endstyle -%}
-{%- endif -%}
-
-{%- comment -%} VIDEO SLIDE STYLES {%- endcomment -%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://api.github.com; img-src 'self' data:;">
+<title>Nubian Pride Designs — Influencer Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  .slideshow__media--video {
-    position: relative;
-    width: 100%;
-    height: 100%;
+  :root {
+    --black: #0A0A0A; --gold: #C9A84C; --gold-dim: #8B6B2A;
+    --gold-light: #F0DFA8; --cream: #F8F3EA; --green: #1A4A2E;
+    --red: #8B1A1A; --surface: #141414; --surface2: #1E1E1E;
+    --border: rgba(201,168,76,0.2); --text: #F0EDE8; --text-muted: #888;
   }
-  .slideshow__media--video video {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-  }
-  .slideshow__slide .banner__media.has-video {
-    overflow: hidden;
-  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--black); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+  #token-screen { position: fixed; inset: 0; background: var(--black); display: flex; align-items: center; justify-content: center; z-index: 100; }
+  .token-box { background: var(--surface); border: 0.5px solid var(--border); border-radius: 16px; padding: 48px 40px; width: 420px; text-align: center; }
+  .token-box .logo { font-family: 'Cinzel', serif; font-size: 13px; letter-spacing: 4px; color: var(--gold); margin-bottom: 8px; }
+  .token-box h2 { font-family: 'Cinzel', serif; font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .token-box p { font-size: 13px; color: var(--text-muted); margin-bottom: 28px; line-height: 1.6; }
+  .token-box input { width: 100%; background: var(--surface2); border: 0.5px solid var(--border); border-radius: 8px; padding: 12px 16px; color: var(--text); font-size: 14px; font-family: 'DM Sans', sans-serif; margin-bottom: 16px; outline: none; transition: border-color 0.2s; }
+  .token-box input:focus { border-color: var(--gold); }
+  .btn-gold { width: 100%; background: var(--gold); color: var(--black); border: none; border-radius: 8px; padding: 13px; font-size: 14px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: opacity 0.2s; }
+  .btn-gold:hover { opacity: 0.85; }
+  .token-hint { font-size: 11px; color: var(--text-muted); margin-top: 14px; }
+  #dashboard { display: none; }
+  header { background: var(--surface); border-bottom: 0.5px solid var(--border); padding: 0 32px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
+  .header-left { display: flex; align-items: center; gap: 14px; }
+  .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-family: 'Cinzel', serif; font-size: 12px; color: var(--black); font-weight: 600; }
+  .brand { font-family: 'Cinzel', serif; font-size: 13px; letter-spacing: 2px; color: var(--gold); }
+  .sub { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; }
+  .header-actions { display: flex; gap: 10px; align-items: center; }
+  .btn-outline { background: transparent; border: 0.5px solid var(--border); color: var(--text); border-radius: 8px; padding: 8px 16px; font-size: 13px; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: border-color 0.2s, background 0.2s; }
+  .btn-outline:hover { border-color: var(--gold); background: rgba(201,168,76,0.06); }
+  .btn-primary { background: var(--gold); color: var(--black); border: none; border-radius: 8px; padding: 8px 18px; font-size: 13px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: opacity 0.2s; }
+  .btn-primary:hover { opacity: 0.85; }
+  .stats-bar { background: var(--surface); border-bottom: 0.5px solid var(--border); padding: 0 32px; display: flex; gap: 0; overflow-x: auto; }
+  .stat { padding: 14px 28px 14px 0; display: flex; flex-direction: column; gap: 2px; border-right: 0.5px solid var(--border); margin-right: 28px; min-width: fit-content; }
+  .stat:last-child { border-right: none; }
+  .stat-val { font-size: 22px; font-weight: 500; color: var(--gold); }
+  .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+  .controls { padding: 20px 32px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .search-wrap { position: relative; flex: 1; min-width: 200px; max-width: 340px; }
+  .search-wrap input { width: 100%; background: var(--surface); border: 0.5px solid var(--border); border-radius: 8px; padding: 9px 14px 9px 36px; color: var(--text); font-size: 13px; font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.2s; }
+  .search-wrap input:focus { border-color: var(--gold); }
+  .search-wrap svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); opacity: 0.4; }
+  select { background: var(--surface); border: 0.5px solid var(--border); color: var(--text); border-radius: 8px; padding: 9px 14px; font-size: 13px; font-family: 'DM Sans', sans-serif; outline: none; cursor: pointer; }
+  .table-wrap { padding: 0 32px 32px; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th { text-align: left; padding: 10px 14px; color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 400; border-bottom: 0.5px solid var(--border); }
+  tbody tr { border-bottom: 0.5px solid rgba(255,255,255,0.04); cursor: pointer; transition: background 0.15s; }
+  tbody tr:hover { background: rgba(201,168,76,0.04); }
+  tbody td { padding: 13px 14px; color: var(--text); }
+  .influencer-name { font-weight: 500; }
+  .handle { color: var(--text-muted); font-size: 12px; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+  .badge-planned { background: rgba(136,136,136,0.15); color: #aaa; }
+  .badge-contacted { background: rgba(201,168,76,0.15); color: var(--gold); }
+  .badge-agreed { background: rgba(26,74,46,0.4); color: #5fba82; }
+  .badge-posted { background: rgba(26,74,46,0.6); color: #7dd49a; }
+  .badge-follow-up { background: rgba(139,107,42,0.3); color: #d4a855; }
+  .badge-retry { background: rgba(139,26,26,0.3); color: #d47070; }
+  #modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; display: none; align-items: center; justify-content: center; }
+  #modal-overlay.open { display: flex; }
+  .modal { background: var(--surface); border: 0.5px solid var(--border); border-radius: 16px; padding: 32px; width: 480px; max-width: 95vw; max-height: 90vh; overflow-y: auto; }
+  .modal h3 { font-family: 'Cinzel', serif; font-size: 16px; color: var(--gold); margin-bottom: 24px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-group label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+  .form-group input, .form-group select, .form-group textarea { background: var(--surface2); border: 0.5px solid var(--border); border-radius: 8px; padding: 10px 12px; color: var(--text); font-size: 13px; font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.2s; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--gold); }
+  .form-group textarea { resize: vertical; min-height: 80px; }
+  .modal-actions { display: flex; gap: 10px; margin-top: 24px; justify-content: flex-end; }
+  .btn-danger { background: rgba(139,26,26,0.3); color: #d47070; border: 0.5px solid rgba(139,26,26,0.4); border-radius: 8px; padding: 9px 18px; font-size: 13px; font-family: 'DM Sans', sans-serif; cursor: pointer; margin-right: auto; }
+  .btn-cancel { background: transparent; border: 0.5px solid var(--border); color: var(--text-muted); border-radius: 8px; padding: 9px 18px; font-size: 13px; font-family: 'DM Sans', sans-serif; cursor: pointer; }
+  #action-menu { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; display: none; align-items: center; justify-content: center; }
+  #action-menu.open { display: flex; }
+  .action-box { background: var(--surface); border: 0.5px solid var(--border); border-radius: 16px; padding: 28px; width: 420px; max-width: 95vw; }
+  .action-box h3 { font-family: 'Cinzel', serif; font-size: 15px; color: var(--gold); margin-bottom: 6px; }
+  .action-box p { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
+  .action-option { border: 0.5px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; cursor: pointer; transition: border-color 0.2s, background 0.2s; display: flex; gap: 14px; align-items: flex-start; }
+  .action-option:hover { border-color: var(--gold); background: rgba(201,168,76,0.04); }
+  .action-option.selected { border-color: var(--gold); background: rgba(201,168,76,0.08); }
+  .action-letter { width: 28px; height: 28px; border-radius: 6px; background: var(--gold); color: var(--black); font-weight: 600; font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .action-title { font-size: 13px; font-weight: 500; color: var(--text); }
+  .action-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .action-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+  #toast { position: fixed; bottom: 28px; right: 28px; z-index: 300; padding: 12px 20px; border-radius: 10px; font-size: 13px; font-weight: 500; opacity: 0; transform: translateY(10px); transition: all 0.3s; pointer-events: none; }
+  #toast.show { opacity: 1; transform: translateY(0); }
+  #toast.success { background: rgba(26,74,46,0.9); color: #7dd49a; border: 0.5px solid #3b8a5a; }
+  #toast.error { background: rgba(139,26,26,0.9); color: #d47070; border: 0.5px solid #8b1a1a; }
 </style>
-
-<slideshow-component
-  class="slider-mobile-gutter{% if section.settings.layout == 'grid' %} page-width{% endif %}{% if section.settings.show_text_below %} mobile-text-below{% endif %}"
-  role="region"
-  aria-roledescription="{{ 'sections.slideshow.carousel' | t }}"
-  aria-label="{{ section.settings.accessibility_info | escape }}"
->
-  {%- if section.settings.auto_rotate and section.blocks.size > 1 -%}
-    <div class="slideshow__controls slideshow__controls--top slider-buttons{% if section.settings.show_text_below %} slideshow__controls--border-radius-mobile{% endif %}">
-      <button
-        type="button"
-        class="slider-button slider-button--prev"
-        name="previous"
-        aria-label="{{ 'sections.slideshow.previous_slideshow' | t }}"
-        aria-controls="Slider-{{ section.id }}"
-      >
-        <span class="svg-wrapper">
-          {{- 'icon-caret.svg' | inline_asset_content -}}
-        </span>
-      </button>
-      <div class="slider-counter slider-counter--{{ section.settings.slider_visual }}{% if section.settings.slider_visual == 'counter' or section.settings.slider_visual == 'numbers' %} caption{% endif %}">
-        {%- if section.settings.slider_visual == 'counter' -%}
-          <span class="slider-counter--current">1</span>
-          <span aria-hidden="true"> / </span>
-          <span class="visually-hidden">{{ 'general.slider.of' | t }}</span>
-          <span class="slider-counter--total">{{ section.blocks.size }}</span>
-        {%- else -%}
-          <div class="slideshow__control-wrapper">
-            {%- for block in section.blocks -%}
-              <button
-                class="slider-counter__link slider-counter__link--{{ section.settings.slider_visual }} link"
-                aria-label="{{ 'sections.slideshow.load_slide' | t }} {{ forloop.index }} {{ 'general.slider.of' | t }} {{ forloop.length }}"
-                aria-controls="Slider-{{ section.id }}"
-              >
-                {%- if section.settings.slider_visual == 'numbers' -%}
-                  {{ forloop.index -}}
-                {%- else -%}
-                  <span class="dot"></span>
-                {%- endif -%}
-              </button>
-            {%- endfor -%}
-          </div>
-        {%- endif -%}
-      </div>
-      <button
-        type="button"
-        class="slider-button slider-button--next"
-        name="next"
-        aria-label="{{ 'sections.slideshow.next_slideshow' | t }}"
-        aria-controls="Slider-{{ section.id }}"
-      >
-        <span class="svg-wrapper">
-          {{- 'icon-caret.svg' | inline_asset_content -}}
-        </span>
-      </button>
-
-      {%- if section.settings.auto_rotate -%}
-        <button
-          type="button"
-          class="slideshow__autoplay slider-button{% if section.settings.auto_rotate == false %} slideshow__autoplay--paused{% endif %}"
-          aria-label="{{ 'sections.slideshow.pause_slideshow' | t }}"
-        >
-          <span class="svg-wrapper">
-            {{- 'icon-pause.svg' | inline_asset_content -}}
-          </span>
-          <span class="svg-wrapper">
-            {{- 'icon-play.svg' | inline_asset_content -}}
-          </span>
-        </button>
-      {%- endif -%}
-    </div>
-  {%- endif -%}
-
-  <div
-    class="slideshow banner banner--{{ section.settings.slide_height }} grid grid--1-col slider slider--everywhere{% if section.settings.show_text_below %} banner--mobile-bottom{% endif %}{% if section.blocks.first.settings.image == blank and section.blocks.first.settings.video_url == blank %} slideshow--placeholder{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
-    id="Slider-{{ section.id }}"
-    aria-live="polite"
-    aria-atomic="true"
-    data-autoplay="{{ section.settings.auto_rotate }}"
-    data-speed="{{ section.settings.change_slides_speed }}"
-  >
-    {%- for block in section.blocks -%}
-      <style>
-        #Slide-{{ section.id }}-{{ forloop.index }} .banner__media::after {
-          opacity: {{ block.settings.image_overlay_opacity | divided_by: 100.0 }};
-        }
-      </style>
-      <div
-        class="slideshow__slide grid__item grid--1-col slider__slide"
-        id="Slide-{{ section.id }}-{{ forloop.index }}"
-        {{ block.shopify_attributes }}
-        role="group"
-        aria-roledescription="{{ 'sections.slideshow.slide' | t }}"
-        aria-label="{{ forloop.index }} {{ 'general.slider.of' | t }} {{ forloop.length }}"
-        tabindex="-1"
-      >
-        {%- comment -%} ---- MEDIA: VIDEO or IMAGE ---- {%- endcomment -%}
-        {%- if block.settings.video_url != blank -%}
-          <div class="slideshow__media banner__media media has-video{% if section.settings.image_behavior != 'none' %} animate--{{ section.settings.image_behavior }}{% endif %}">
-            <div class="slideshow__media--video">
-              <video
-                autoplay
-                muted
-                loop
-                playsinline
-                preload="auto"
-                aria-label="{{ block.settings.heading | default: 'Slideshow video' | escape }}"
-              >
-                <source src="{{ block.settings.video_url }}" type="video/mp4">
-              </video>
-            </div>
-          </div>
-        {%- else -%}
-          <div class="slideshow__media banner__media media{% if block.settings.image == blank %} placeholder{% endif %}{% if section.settings.image_behavior != 'none' %} animate--{{ section.settings.image_behavior }}{% endif %}">
-            {%- if block.settings.image -%}
-              {%- liquid
-                assign height = block.settings.image.width | divided_by: block.settings.image.aspect_ratio | round
-                if section.settings.image_behavior == 'ambient'
-                  assign sizes = '120vw'
-                  assign widths = '450, 660, 900, 1320, 1800, 2136, 2400, 3600, 7680'
-                else
-                  assign sizes = '100vw'
-                  assign widths = '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840'
-                endif
-                assign fetch_priority = 'auto'
-                if section.index == 1
-                  assign fetch_priority = 'high'
-                endif
-              -%}
-              {%- if forloop.first %}
-                {{
-                  block.settings.image
-                  | image_url: width: 3840
-                  | image_tag: height: height, sizes: sizes, widths: widths, fetchpriority: fetch_priority
-                }}
-              {%- else -%}
-                {{
-                  block.settings.image
-                  | image_url: width: 3840
-                  | image_tag: loading: 'lazy', height: height, sizes: sizes, widths: widths
-                }}
-              {%- endif -%}
-            {%- else -%}
-              {%- assign placeholder_slide = forloop.index | modulo: 2 -%}
-              {%- if placeholder_slide == 1 -%}
-                {{ 'hero-apparel-2' | placeholder_svg_tag: 'placeholder-svg' }}
-              {%- else -%}
-                {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
-              {%- endif -%}
-            {%- endif -%}
-          </div>
-        {%- endif -%}
-
-        <div class="slideshow__text-wrapper banner__content banner__content--{{ block.settings.box_align }} page-width{% if block.settings.show_text_box == false %} banner--desktop-transparent{% endif %}{% if settings.animations_reveal_on_scroll and forloop.index == 1 %} scroll-trigger animate--slide-in{% endif %}">
-          <div class="slideshow__text banner__box content-container content-container--full-width-mobile color-{{ block.settings.color_scheme }} gradient slideshow__text--{{ block.settings.text_alignment }} slideshow__text-mobile--{{ block.settings.text_alignment_mobile }}">
-            {%- if block.settings.heading != blank -%}
-              <h2 class="banner__heading inline-richtext {{ block.settings.heading_size }}">
-                {{ block.settings.heading }}
-              </h2>
-            {%- endif -%}
-            {%- if block.settings.subheading != blank -%}
-              <div class="banner__text rte">
-                <p>{{ block.settings.subheading }}</p>
-              </div>
-            {%- endif -%}
-            {%- if block.settings.button_label != blank -%}
-              <div class="banner__buttons">
-                <a
-                  {% if block.settings.link %}
-                    href="{{ block.settings.link }}"
-                  {% else %}
-                    role="link" aria-disabled="true"
-                  {% endif %}
-                  class="button {% if block.settings.button_style_secondary %}button--secondary{% else %}button--primary{% endif %}"
-                >
-                  {{- block.settings.button_label | escape -}}
-                </a>
-              </div>
-            {%- endif -%}
-          </div>
-        </div>
-      </div>
-    {%- endfor -%}
+</head>
+<body>
+<div id="token-screen">
+  <div class="token-box">
+    <div class="logo">🖤 NUBIAN PRIDE DESIGNS</div>
+    <h2>Connect to GitHub</h2>
+    <p>Enter your GitHub Personal Access Token to enable Search Now &amp; Send Outreach.</p>
+    <input type="password" id="token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxx" />
+    <button class="btn-gold" onclick="connectDashboard()">Connect &amp; Open Dashboard</button>
+    <div class="token-hint">Your token is stored only in your browser session.</div>
   </div>
-
-  {%- if section.blocks.size > 1 and section.settings.auto_rotate == false -%}
-    <div class="slideshow__controls slider-buttons{% if section.settings.show_text_below %} slideshow__controls--border-radius-mobile{% endif %}">
-      <button
-        type="button"
-        class="slider-button slider-button--prev"
-        name="previous"
-        aria-label="{{ 'sections.slideshow.previous_slideshow' | t }}"
-        aria-controls="Slider-{{ section.id }}"
-      >
-        <span class="svg-wrapper">
-          {{- 'icon-caret.svg' | inline_asset_content -}}
-        </span>
-      </button>
-      <div class="slider-counter slider-counter--{{ section.settings.slider_visual }}{% if section.settings.slider_visual == 'counter' or section.settings.slider_visual == 'numbers' %} caption{% endif %}">
-        {%- if section.settings.slider_visual == 'counter' -%}
-          <span class="slider-counter--current">1</span>
-          <span aria-hidden="true"> / </span>
-          <span class="visually-hidden">{{ 'general.slider.of' | t }}</span>
-          <span class="slider-counter--total">{{ section.blocks.size }}</span>
-        {%- else -%}
-          <div class="slideshow__control-wrapper">
-            {%- for block in section.blocks -%}
-              <button
-                class="slider-counter__link slider-counter__link--{{ section.settings.slider_visual }} link"
-                aria-label="{{ 'sections.slideshow.load_slide' | t }} {{ forloop.index }} {{ 'general.slider.of' | t }} {{ forloop.length }}"
-                aria-controls="Slider-{{ section.id }}"
-              >
-                {%- if section.settings.slider_visual == 'numbers' -%}
-                  {{ forloop.index -}}
-                {%- else -%}
-                  <span class="dot"></span>
-                {%- endif -%}
-              </button>
-            {%- endfor -%}
-          </div>
-        {%- endif -%}
-      </div>
-      <button
-        type="button"
-        class="slider-button slider-button--next"
-        name="next"
-        aria-label="{{ 'sections.slideshow.next_slideshow' | t }}"
-        aria-controls="Slider-{{ section.id }}"
-      >
-        <span class="svg-wrapper">
-          {{- 'icon-caret.svg' | inline_asset_content -}}
-        </span>
-      </button>
-
-      {%- if section.settings.auto_rotate -%}
-        <button
-          type="button"
-          class="slideshow__autoplay slider-button{% if section.settings.auto_rotate == false %} slideshow__autoplay--paused{% endif %}"
-          aria-label="{{ 'sections.slideshow.pause_slideshow' | t }}"
-        >
-          <span class="svg-wrapper">
-            {{- 'icon-pause.svg' | inline_asset_content -}}
-          </span>
-          <span class="svg-wrapper">
-            {{- 'icon-play.svg' | inline_asset_content -}}
-          </span>
-        </button>
-      {%- endif -%}
+</div>
+<div id="dashboard">
+  <header>
+    <div class="header-left">
+      <div class="avatar">NP</div>
+      <div><div class="brand">NUBIAN PRIDE</div><div class="sub">Influencer Leads</div></div>
     </div>
-  {%- endif -%}
-</slideshow-component>
-
-{%- if request.design_mode -%}
-  <script src="{{ 'theme-editor.js' | asset_url }}" defer="defer"></script>
-{%- endif -%}
-
-{% schema %}
-{
-  "name": "t:sections.slideshow.name",
-  "tag": "section",
-  "class": "section",
-  "disabled_on": {
-    "groups": ["header", "footer"]
-  },
-  "settings": [
-    {
-      "type": "select",
-      "id": "layout",
-      "options": [
-        {
-          "value": "full_bleed",
-          "label": "t:sections.slideshow.settings.layout.options__1.label"
-        },
-        {
-          "value": "grid",
-          "label": "t:sections.slideshow.settings.layout.options__2.label"
-        }
-      ],
-      "default": "full_bleed",
-      "label": "t:sections.slideshow.settings.layout.label"
-    },
-    {
-      "type": "select",
-      "id": "slide_height",
-      "options": [
-        {
-          "value": "adapt_image",
-          "label": "t:sections.slideshow.settings.slide_height.options__1.label"
-        },
-        {
-          "value": "small",
-          "label": "t:sections.slideshow.settings.slide_height.options__2.label"
-        },
-        {
-          "value": "medium",
-          "label": "t:sections.slideshow.settings.slide_height.options__3.label"
-        },
-        {
-          "value": "large",
-          "label": "t:sections.slideshow.settings.slide_height.options__4.label"
-        }
-      ],
-      "default": "medium",
-      "label": "t:sections.slideshow.settings.slide_height.label"
-    },
-    {
-      "type": "select",
-      "id": "slider_visual",
-      "options": [
-        {
-          "value": "dots",
-          "label": "t:sections.slideshow.settings.slider_visual.options__2.label"
-        },
-        {
-          "value": "counter",
-          "label": "t:sections.slideshow.settings.slider_visual.options__1.label"
-        },
-        {
-          "value": "numbers",
-          "label": "t:sections.slideshow.settings.slider_visual.options__3.label"
-        }
-      ],
-      "default": "counter",
-      "label": "t:sections.slideshow.settings.slider_visual.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "auto_rotate",
-      "label": "t:sections.slideshow.settings.auto_rotate.label",
-      "default": false
-    },
-    {
-      "type": "range",
-      "id": "change_slides_speed",
-      "min": 3,
-      "max": 9,
-      "step": 2,
-      "unit": "s",
-      "label": "t:sections.slideshow.settings.change_slides_speed.label",
-      "default": 5
-    },
-    {
-      "type": "select",
-      "id": "image_behavior",
-      "options": [
-        {
-          "value": "none",
-          "label": "t:sections.all.animation.image_behavior.options__1.label"
-        },
-        {
-          "value": "ambient",
-          "label": "t:sections.all.animation.image_behavior.options__2.label"
-        }
-      ],
-      "default": "none",
-      "label": "t:sections.all.animation.image_behavior.label"
-    },
-    {
-      "type": "header",
-      "content": "t:sections.slideshow.settings.mobile.content"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_text_below",
-      "label": "t:sections.slideshow.settings.show_text_below.label",
-      "default": true
-    },
-    {
-      "type": "header",
-      "content": "t:sections.slideshow.settings.accessibility.content"
-    },
-    {
-      "type": "text",
-      "id": "accessibility_info",
-      "label": "t:sections.slideshow.settings.accessibility.label",
-      "info": "t:sections.slideshow.settings.accessibility.info",
-      "default": "t:sections.slideshow.settings.accessibility.default"
-    }
-  ],
-  "blocks": [
-    {
-      "type": "slide",
-      "name": "t:sections.slideshow.blocks.slide.name",
-      "limit": 5,
-      "settings": [
-        {
-          "type": "header",
-          "content": "Media"
-        },
-        {
-          "type": "text",
-          "id": "video_url",
-          "label": "Video URL (.mp4)",
-          "info": "Upload your video to Content > Files and paste the URL here. If set, video will show instead of the image below."
-        },
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "t:sections.slideshow.blocks.slide.settings.image.label"
-        },
-        {
-          "type": "range",
-          "id": "image_overlay_opacity",
-          "min": 0,
-          "max": 100,
-          "step": 10,
-          "unit": "%",
-          "label": "t:sections.slideshow.blocks.slide.settings.image_overlay_opacity.label",
-          "default": 0
-        },
-        {
-          "type": "header",
-          "content": "t:sections.slideshow.blocks.slide.settings.header_text.content"
-        },
-        {
-          "type": "inline_richtext",
-          "id": "heading",
-          "default": "t:sections.slideshow.blocks.slide.settings.heading.default",
-          "label": "t:sections.slideshow.blocks.slide.settings.heading.label"
-        },
-        {
-          "type": "select",
-          "id": "heading_size",
-          "options": [
-            {
-              "value": "h2",
-              "label": "t:sections.all.heading_size.options__1.label"
-            },
-            {
-              "value": "h1",
-              "label": "t:sections.all.heading_size.options__2.label"
-            },
-            {
-              "value": "h0",
-              "label": "t:sections.all.heading_size.options__3.label"
-            },
-            {
-              "value": "hxl",
-              "label": "t:sections.all.heading_size.options__4.label"
-            },
-            {
-              "value": "hxxl",
-              "label": "t:sections.all.heading_size.options__5.label"
-            }
-          ],
-          "default": "h1",
-          "label": "t:sections.all.heading_size.label"
-        },
-        {
-          "type": "inline_richtext",
-          "id": "subheading",
-          "default": "t:sections.slideshow.blocks.slide.settings.subheading.default",
-          "label": "t:sections.slideshow.blocks.slide.settings.subheading.label"
-        },
-        {
-          "type": "header",
-          "content": "t:sections.slideshow.blocks.slide.settings.header_button.content"
-        },        
-        {
-          "type": "text",
-          "id": "button_label",
-          "default": "t:sections.slideshow.blocks.slide.settings.button_label.default",
-          "label": "t:sections.slideshow.blocks.slide.settings.button_label.label", 
-          "info": "t:sections.slideshow.blocks.slide.settings.button_label.info"
-        },
-        {
-          "type": "url",
-          "id": "link",
-          "label": "t:sections.slideshow.blocks.slide.settings.link.label"
-        },
-        {
-          "type": "checkbox",
-          "id": "button_style_secondary",
-          "label": "t:sections.slideshow.blocks.slide.settings.secondary_style.label",
-          "default": false
-        },
-        {
-          "type": "header",
-          "content": "t:sections.slideshow.blocks.slide.settings.header_layout.content"
-        },         
-        {
-          "type": "checkbox",
-          "id": "show_text_box",
-          "label": "t:sections.slideshow.blocks.slide.settings.show_text_box.label",
-          "default": true
-        },
-        {
-          "type": "select",
-          "id": "box_align",
-          "options": [
-            {
-              "value": "top-left",
-              "label": "t:sections.slideshow.blocks.slide.settings.box_align.options__1.label"
-            },
-            {
-              "value": "top-center",
-              "label": "t:sections.slideshow.blocks.slide.settings.box_align.options__2.label"
-            },
-            {
-              "value": "top-right",
-              "label": "t:sections.slideshow.blocks.slide.settings.box_align.options__3.label"
-            },
-            {
-              "value": "middle-left",
-              "label": "t:sections.slideshow.blocks.slide.settings.box_align.options__4.label"
-            },
-            {
-              "value": "middle-center",
-              "label": "t:sections.slideshow.blocks.slide.settings.box_align.options__5.label"
-            },
-            {
-              "value": "middle-right",
-              "label": "t:sections.slideshow.blocks.slide.settings.box_align.options__6.label"
-            },
-            {
-              "value": "bottom-left",
-              "label": "t:sections.slideshow.blocks.slide.settings.box_align.options__7.label"
-            },
-            {
-              "value": "bottom-center",
-              "label": "t:sections.slideshow.blocks.slide.settings.box_align.options__8.label"
-            },
-            {
-              "value": "bottom-right",
-              "label": "t:sections.slideshow.blocks.slide.settings.box_align.options__9.label"
-            }
-          ],
-          "default": "middle-center",
-          "label": "t:sections.slideshow.blocks.slide.settings.box_align.label"
-        },
-        {
-          "type": "select",
-          "id": "text_alignment",
-          "options": [
-            {
-              "value": "left",
-              "label": "t:sections.slideshow.blocks.slide.settings.text_alignment.option_1.label"
-            },
-            {
-              "value": "center",
-              "label": "t:sections.slideshow.blocks.slide.settings.text_alignment.option_2.label"
-            },
-            {
-              "value": "right",
-              "label": "t:sections.slideshow.blocks.slide.settings.text_alignment.option_3.label"
-            }
-          ],
-          "default": "center",
-          "label": "t:sections.slideshow.blocks.slide.settings.text_alignment.label"
-        },
-        {
-          "type": "select",
-          "id": "text_alignment_mobile",
-          "options": [
-            {
-              "value": "left",
-              "label": "t:sections.slideshow.blocks.slide.settings.text_alignment_mobile.options__1.label"
-            },
-            {
-              "value": "center",
-              "label": "t:sections.slideshow.blocks.slide.settings.text_alignment_mobile.options__2.label"
-            },
-            {
-              "value": "right",
-              "label": "t:sections.slideshow.blocks.slide.settings.text_alignment_mobile.options__3.label"
-            }
-          ],
-          "default": "center",
-          "label": "t:sections.slideshow.blocks.slide.settings.text_alignment_mobile.label"
-        },        
-        {
-          "type": "color_scheme",
-          "id": "color_scheme",
-          "label": "t:sections.all.colors.label",
-          "default": "scheme-1"
-        }
-      ]
-    }
-  ],
-  "presets": [
-    {
-      "name": "t:sections.slideshow.presets.name",
-      "blocks": [
-        {
-          "type": "slide"
-        },
-        {
-          "type": "slide"
-        }
-      ]
-    }
-  ]
+    <div class="header-actions">
+      <button class="btn-outline" onclick="openActionMenu('search')">Search Now</button>
+      <button class="btn-outline" onclick="openActionMenu('outreach')">Send Outreach</button>
+      <button class="btn-primary" onclick="openAddLead()">+ Add Lead</button>
+    </div>
+  </header>
+  <div class="stats-bar" id="stats-bar"></div>
+  <div class="controls">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="search-input" placeholder="Search by name or handle..." oninput="renderTable()" />
+    </div>
+    <select id="filter-platform" onchange="renderTable()">
+      <option value="">All Platforms</option>
+      <option>Instagram</option><option>TikTok</option><option>Facebook</option><option>Pinterest</option><option>LinkedIn</option>
+    </select>
+    <select id="filter-status" onchange="renderTable()">
+      <option value="">All Statuses</option>
+      <option>Planned</option><option>Contacted</option><option>Agreed</option><option>Posted</option><option>Follow-up</option><option>Retry</option>
+    </select>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Influencer</th><th>Platform</th><th>Followers</th><th>Status</th><th>Contacted</th><th>Notes</th></tr></thead>
+      <tbody id="leads-tbody"></tbody>
+    </table>
+  </div>
+</div>
+<div id="modal-overlay">
+  <div class="modal">
+    <h3 id="modal-title">Add New Lead</h3>
+    <div class="form-grid">
+      <div class="form-group"><label>Full Name</label><input type="text" id="f-name" placeholder="Amara Johnson" /></div>
+      <div class="form-group"><label>Handle</label><input type="text" id="f-handle" placeholder="@amarastyles_" /></div>
+      <div class="form-group"><label>Platform</label><select id="f-platform"><option>Instagram</option><option>TikTok</option><option>Facebook</option><option>Pinterest</option><option>LinkedIn</option></select></div>
+      <div class="form-group"><label>Followers</label><input type="text" id="f-followers" placeholder="18.4k" /></div>
+      <div class="form-group"><label>Status</label><select id="f-status"><option>Planned</option><option>Contacted</option><option>Agreed</option><option>Posted</option><option>Follow-up</option><option>Retry</option></select></div>
+      <div class="form-group"><label>Email</label><input type="email" id="f-email" placeholder="contact@email.com" /></div>
+      <div class="form-group full"><label>Notes</label><textarea id="f-notes" placeholder="Natural hair + HBCU content creator..."></textarea></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-danger" id="delete-btn" onclick="deleteLead()" style="display:none">Delete</button>
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-gold" style="width:auto;padding:9px 24px;" onclick="saveLead()">Save Lead</button>
+    </div>
+  </div>
+</div>
+<div id="action-menu">
+  <div class="action-box">
+    <h3>Run GitHub Action</h3>
+    <p>Choose what to trigger from the dashboard.</p>
+    <div class="action-option" id="opt-search" onclick="selectAction('search')">
+      <div class="action-letter">S</div>
+      <div><div class="action-title">Weekly Influencer Search</div><div class="action-desc">Searches all 5 platforms for new leads</div></div>
+    </div>
+    <div class="action-option" id="opt-outreach" onclick="selectAction('outreach')">
+      <div class="action-letter">E</div>
+      <div><div class="action-title">Send Outreach Emails</div><div class="action-desc">Sends emails to all Approved contacts</div></div>
+    </div>
+    <div class="action-option" id="opt-both" onclick="selectAction('both')">
+      <div class="action-letter">B</div>
+      <div><div class="action-title">Run Both</div><div class="action-desc">Search first then send outreach emails</div></div>
+    </div>
+    <div class="action-footer">
+      <button class="btn-cancel" onclick="closeActionMenu()">Cancel</button>
+      <button class="btn-gold" style="width:auto;padding:9px 24px;" onclick="runAction()">Run now</button>
+    </div>
+  </div>
+</div>
+<div id="toast"></div>
+<script>
+var REPO_OWNER = 'meloneiemorrell1973';
+var REPO_NAME = 'influencer-finder';
+var WORKFLOW_SEARCH = 'weekly_search.yml';
+var WORKFLOW_OUTREACH = 'send_outreach.yml';
+var ghToken = '';
+var leads = [];
+var editingIndex = -1;
+var selectedAction = '';
+var sampleLeads = [
+  { name:'Amara Johnson', handle:'@amarast', platform:'Instagram', followers:'18.4k', status:'Planned', contacted:'', email:'', notes:'Natural hair + HBCU content creator' },
+  { name:'Destiny Renee', handle:'@destiny', platform:'TikTok', followers:'34.2k', status:'Contacted', contacted:'May 12', email:'', notes:'Viral Essence Fest.' },
+  { name:'Zoe Malik', handle:'@zoemal', platform:'Instagram', followers:'9.8k', status:'Agreed', contacted:'May 10', email:'', notes:'Micro-influencer' }
+];
+function connectDashboard() {
+  var t = document.getElementById('token-input').value.trim();
+  if (!t.startsWith('ghp_')) { showToast('Please enter a valid GitHub token (starts with ghp_)', 'error'); return; }
+  ghToken = t;
+  try { leads = JSON.parse(localStorage.getItem('npd_leads')) || sampleLeads; } catch(e) { leads = sampleLeads; }
+  document.getElementById('token-screen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  renderStats(); renderTable();
 }
-{% endschema %}
+function saveLeads() { try { localStorage.setItem('npd_leads', JSON.stringify(leads)); } catch(e) {} }
+function renderStats() {
+  var counts = { total:leads.length, contacted:0, agreed:0, posted:0, instagram:0, tiktok:0, facebook:0, pinterest:0, linkedin:0, 'follow-up':0, retry:0 };
+  leads.forEach(function(l) {
+    var s = l.status.toLowerCase().replace(' ','-');
+    if (counts[s] !== undefined) counts[s]++;
+    var p = l.platform.toLowerCase();
+    if (counts[p] !== undefined) counts[p]++;
+    if (s === 'contacted' || s === 'agreed' || s === 'posted') counts.contacted++;
+  });
+  var stats = [
+    {val:counts.total,label:'Total'},{val:counts.contacted,label:'Contacted'},
+    {val:counts.agreed,label:'Agreed'},{val:counts.posted,label:'Posted'},
+    {val:counts.instagram,label:'Instagram'},{val:counts.tiktok,label:'TikTok'},
+    {val:counts.facebook,label:'Facebook'},{val:counts.pinterest,label:'Pinterest'},
+    {val:counts.linkedin,label:'LinkedIn'},{val:counts['follow-up'],label:'Follow-up'},{val:counts.retry,label:'Retry'}
+  ];
+  document.getElementById('stats-bar').innerHTML = stats.map(function(s) {
+    return '<div class="stat"><div class="stat-val">'+s.val+'</div><div class="stat-label">'+s.label+'</div></div>';
+  }).join('');
+}
+function renderTable() {
+  var q = document.getElementById('search-input').value.toLowerCase();
+  var fp = document.getElementById('filter-platform').value;
+  var fs = document.getElementById('filter-status').value;
+  var filtered = leads.filter(function(l) {
+    if (q && !l.name.toLowerCase().includes(q) && !l.handle.toLowerCase().includes(q)) return false;
+    if (fp && l.platform !== fp) return false;
+    if (fs && l.status !== fs) return false;
+    return true;
+  });
+  var tbody = document.getElementById('leads-tbody');
+  if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-muted)">No leads found</td></tr>'; return; }
+  tbody.innerHTML = filtered.map(function(l) {
+    var realIdx = leads.indexOf(l);
+    var badgeClass = 'badge-' + l.status.toLowerCase().replace(' ','-');
+    return '<tr onclick="openEditLead('+realIdx+')">'
+      +'<td><div class="influencer-name">'+l.name+'</div><div class="handle">'+l.handle+'</div></td>'
+      +'<td>'+l.platform+'</td><td>'+l.followers+'</td>'
+      +'<td><span class="badge '+badgeClass+'">'+l.status+'</span></td>'
+      +'<td style="color:var(--text-muted)">'+( l.contacted||'Not contacted')+'</td>'
+      +'<td style="color:var(--text-muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(l.notes||'')+'</td>'
+      +'</tr>';
+  }).join('');
+}
+function openAddLead() {
+  editingIndex = -1;
+  document.getElementById('modal-title').textContent = 'Add New Lead';
+  document.getElementById('delete-btn').style.display = 'none';
+  ['name','handle','followers','email','notes'].forEach(function(f){ document.getElementById('f-'+f).value=''; });
+  document.getElementById('f-platform').value = 'Instagram';
+  document.getElementById('f-status').value = 'Planned';
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function openEditLead(idx) {
+  editingIndex = idx;
+  var l = leads[idx];
+  document.getElementById('modal-title').textContent = 'Edit Lead';
+  document.getElementById('delete-btn').style.display = 'block';
+  document.getElementById('f-name').value = l.name;
+  document.getElementById('f-handle').value = l.handle;
+  document.getElementById('f-platform').value = l.platform;
+  document.getElementById('f-followers').value = l.followers;
+  document.getElementById('f-status').value = l.status;
+  document.getElementById('f-email').value = l.email||'';
+  document.getElementById('f-notes').value = l.notes||'';
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+function saveLead() {
+  var lead = {
+    name: document.getElementById('f-name').value.trim(),
+    handle: document.getElementById('f-handle').value.trim(),
+    platform: document.getElementById('f-platform').value,
+    followers: document.getElementById('f-followers').value.trim(),
+    status: document.getElementById('f-status').value,
+    contacted: '',
+    email: document.getElementById('f-email').value.trim(),
+    notes: document.getElementById('f-notes').value.trim()
+  };
+  if (!lead.name) { showToast('Please enter a name', 'error'); return; }
+  if (editingIndex === -1) { leads.unshift(lead); showToast('Lead added successfully', 'success'); }
+  else { lead.contacted = leads[editingIndex].contacted; leads[editingIndex] = lead; showToast('Lead updated', 'success'); }
+  saveLeads(); closeModal(); renderStats(); renderTable();
+}
+function deleteLead() {
+  if (!confirm('Delete this lead?')) return;
+  leads.splice(editingIndex, 1);
+  saveLeads(); closeModal(); renderStats(); renderTable();
+  showToast('Lead deleted', 'success');
+}
+function openActionMenu(type) {
+  selectedAction = type;
+  document.querySelectorAll('.action-option').forEach(function(el){ el.classList.remove('selected'); });
+  document.getElementById('opt-'+(type==='search'?'search':'outreach')).classList.add('selected');
+  document.getElementById('action-menu').classList.add('open');
+}
+function selectAction(type) {
+  selectedAction = type;
+  document.querySelectorAll('.action-option').forEach(function(el){ el.classList.remove('selected'); });
+  document.getElementById('opt-'+type).classList.add('selected');
+}
+function closeActionMenu() { document.getElementById('action-menu').classList.remove('open'); }
+async function runAction() {
+  if (!selectedAction) { showToast('Please select an action', 'error'); return; }
+  closeActionMenu();
+  var workflows = [];
+  if (selectedAction === 'search' || selectedAction === 'both') workflows.push(WORKFLOW_SEARCH);
+  if (selectedAction === 'outreach' || selectedAction === 'both') workflows.push(WORKFLOW_OUTREACH);
+  var allOk = true;
+  for (var i = 0; i < workflows.length; i++) {
+    var wf = workflows[i];
+    var url = 'https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/actions/workflows/' + wf + '/dispatches';
+    try {
+      var res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Authorization': 'token ' + ghToken,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ ref: 'main' })
+      });
+      if (res.status !== 204) allOk = false;
+    } catch(e) { allOk = false; }
+  }
+  if (allOk) showToast('Action triggered! Check GitHub Actions.', 'success');
+  else showToast('Something went wrong — check your token.', 'error');
+}
+function showToast(msg, type) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'show ' + type;
+  setTimeout(function(){ t.className = ''; }, 3500);
+}
+document.getElementById('modal-overlay').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
+document.getElementById('action-menu').addEventListener('click', function(e){ if(e.target===this) closeActionMenu(); });
+</script>
+</body>
+</html>
