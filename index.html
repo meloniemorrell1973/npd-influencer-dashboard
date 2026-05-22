@@ -547,7 +547,7 @@ async function runAction() {
   let allOk = true;
   for (const wf of workflows) {
     try {
-      const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/actions/workflows/${wf}/dispatches`, {
+      const url = 'https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/actions/workflows/' + wf + '/dispatches'; const res = await fetch(url, {
         method: 'POST',
         headers: { 'Authorization': `token ${ghToken}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
         body: JSON.stringify({ ref: 'main' })
